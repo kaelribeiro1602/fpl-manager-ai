@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import Providers from "@/providers/query-provider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -27,17 +28,19 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background text-foreground`}
       >
-        <main className="min-h-screen flex flex-col">
-          <header className="border-b px-6 py-4 flex items-center justify-between">
-            <h1 className="text-xl font-bold tracking-tight">⚽ FPL Manager AI</h1>
-            <nav className="flex gap-4 text-sm font-medium">
-              <span className="text-muted-foreground">Kael v0.1.0</span>
-            </nav>
-          </header>
-          <div className="flex-1 p-6">
-            {children}
-          </div>
-        </main>
+        <Providers>
+          <main className="min-h-screen flex flex-col">
+            <header className="border-b px-6 py-4 flex items-center justify-between">
+              <h1 className="text-xl font-bold tracking-tight">⚽ FPL Manager AI</h1>
+              <nav className="flex gap-4 text-sm font-medium">
+                <span className="text-muted-foreground">Kael v0.1.0</span>
+              </nav>
+            </header>
+            <div className="flex-1 p-6">
+              {children}
+            </div>
+          </main>
+        </Providers>
       </body>
     </html>
   );
