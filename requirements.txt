@@ -1,1 +1,4 @@
-frontend/requirements.txt
+httpx
+fastapi
+pydantic
+uvicorn

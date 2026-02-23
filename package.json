@@ -1,0 +1,12 @@
+{
+  "name": "fpl-manager-ai-root",
+  "private": true,
+  "workspaces": [
+    "frontend"
+  ],
+  "scripts": {
+    "build": "cd frontend && npm run build",
+    "install": "cd frontend && npm install",
+    "dev": "cd frontend && npm run dev"
+  }
+}
