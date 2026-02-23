@@ -8,9 +8,17 @@ FPL_BASE_URL = "https://fantasy.premierleague.com/api"
 
 class FPLClient:
     def __init__(self):
-        self.client = httpx.Client(base_url=FPL_BASE_URL, headers={
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
-        })
+        self.client = httpx.Client(
+            base_url=FPL_BASE_URL,
+            headers={
+                "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+                "Accept": "application/json, text/plain, */*",
+                "Accept-Language": "en-GB,en-US;q=0.9,en;q=0.8",
+                "Origin": "https://fantasy.premierleague.com",
+                "Referer": "https://fantasy.premierleague.com/"
+            },
+            follow_redirects=True
+        )
 
     def get_bootstrap_static(self):
         """Fetch general information (players, teams, gameweeks)."""
