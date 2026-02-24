@@ -1,6 +1,7 @@
 import os
 import httpx
 import json
+import asyncio
 from fastapi import APIRouter, HTTPException
 from typing import Any, Dict
 from agno.agent import Agent
@@ -96,5 +97,3 @@ async def recommend_transfer(manager_id: int) -> Dict[str, Any]:
 
         except Exception as e:
             raise HTTPException(status_code=500, detail=f"AI Suggestion Error: {str(e)}")
-
-import asyncio # Needed for gather
