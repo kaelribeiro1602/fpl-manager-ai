@@ -264,7 +264,7 @@ export default function ManagerStats() {
                         stackId="a" 
                         fill="#3b82f6" 
                         name="Points Scored" 
-                        onClick={(data) => fetchGWDetails(data.event)}
+                        onClick={(data: any) => fetchGWDetails(data.event)}
                         style={{ cursor: 'pointer' }}
                       />
                       <Bar 
@@ -273,7 +273,7 @@ export default function ManagerStats() {
                         fill="#f97316" 
                         name="Left on Bench" 
                         radius={[4, 4, 0, 0]} 
-                        onClick={(data) => fetchGWDetails(data.event)}
+                        onClick={(data: any) => fetchGWDetails(data.event)}
                         style={{ cursor: 'pointer' }}
                       />
                     </BarChart>
