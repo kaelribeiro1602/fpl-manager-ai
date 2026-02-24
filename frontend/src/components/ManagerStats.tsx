@@ -102,54 +102,54 @@ export default function ManagerStats() {
   };
 
   return (
-    <div className="max-w-6xl mx-auto p-6 space-y-8">
-      <div className="bg-card text-card-foreground rounded-lg border shadow-sm p-6">
-        <h2 className="text-2xl font-bold mb-4">Manager Lookup</h2>
-        <form onSubmit={fetchStats} className="flex gap-4">
+    <div className="max-w-6xl mx-auto p-4 md:p-6 space-y-6 md:space-y-8">
+      <div className="bg-card text-card-foreground rounded-lg border shadow-sm p-4 md:p-6">
+        <h2 className="text-xl md:text-2xl font-bold mb-4 text-center md:text-left">Manager Lookup</h2>
+        <form onSubmit={fetchStats} className="flex flex-col sm:flex-row gap-3">
           <input
             type="number"
             value={managerId}
             onChange={(e) => setManagerId(e.target.value)}
-            placeholder="Enter FPL ID (e.g. 123456)"
-            className="flex-1 px-4 py-2 border rounded-md bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+            placeholder="Enter FPL ID"
+            className="flex-1 px-4 py-2 border rounded-md bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary w-full"
             required
           />
           <button
             type="submit"
             disabled={loading}
-            className="px-6 py-2 bg-primary text-primary-foreground rounded-md hover:opacity-90 disabled:opacity-50 font-medium transition-colors"
+            className="w-full sm:w-auto px-6 py-2 bg-primary text-primary-foreground rounded-md hover:opacity-90 disabled:opacity-50 font-medium transition-colors"
           >
             {loading ? 'Searching...' : 'Search'}
           </button>
         </form>
-        {error && <p className="text-destructive mt-2 text-sm">{error}</p>}
+        {error && <p className="text-destructive mt-2 text-sm text-center md:text-left">{error}</p>}
       </div>
 
       {managerData && (
         <div className="space-y-6">
           {/* Manager Overview Card */}
-          <div className="bg-card text-card-foreground rounded-lg border shadow-sm p-6 space-y-4">
-            <div>
-              <h3 className="text-xl font-bold">{managerData.player_first_name} {managerData.player_last_name}</h3>
+          <div className="bg-card text-card-foreground rounded-lg border shadow-sm p-4 md:p-6 space-y-4">
+            <div className="text-center md:text-left">
+              <h3 className="text-lg md:text-xl font-bold">{managerData.player_first_name} {managerData.player_last_name}</h3>
               <p className="text-muted-foreground">{managerData.name}</p>
             </div>
             
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-4 border-t">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-4 border-t text-center md:text-left">
               <div>
-                <p className="text-sm text-muted-foreground">Overall Rank</p>
-                <p className="text-2xl font-bold text-primary">#{managerData.summary_overall_rank?.toLocaleString()}</p>
+                <p className="text-xs md:text-sm text-muted-foreground uppercase font-medium">Overall Rank</p>
+                <p className="text-xl md:text-2xl font-bold text-primary">#{managerData.summary_overall_rank?.toLocaleString()}</p>
               </div>
               <div>
-                <p className="text-sm text-muted-foreground">Total Points</p>
-                <p className="text-2xl font-bold">{managerData.summary_overall_points?.toLocaleString()}</p>
+                <p className="text-xs md:text-sm text-muted-foreground uppercase font-medium">Total Points</p>
+                <p className="text-xl md:text-2xl font-bold">{managerData.summary_overall_points?.toLocaleString()}</p>
               </div>
               <div>
-                <p className="text-sm text-muted-foreground">GW Points</p>
-                <p className="text-lg font-semibold">{managerData.summary_event_points}</p>
+                <p className="text-xs md:text-sm text-muted-foreground uppercase font-medium">GW Points</p>
+                <p className="text-lg md:text-xl font-semibold">{managerData.summary_event_points}</p>
               </div>
               <div>
-                <p className="text-sm text-muted-foreground">Region</p>
-                <p className="text-lg font-semibold">{managerData.player_region_name}</p>
+                <p className="text-xs md:text-sm text-muted-foreground uppercase font-medium">Region</p>
+                <p className="text-lg md:text-xl font-semibold">{managerData.player_region_name}</p>
               </div>
             </div>
           </div>
@@ -159,9 +159,9 @@ export default function ManagerStats() {
             <div className="grid gap-6 md:grid-cols-2">
               
               {/* Rank History Chart */}
-              <div className="bg-card text-card-foreground rounded-lg border shadow-sm p-6">
-                <h3 className="text-lg font-semibold mb-4">Overall Rank History</h3>
-                <div className="h-[300px] w-full">
+              <div className="bg-card text-card-foreground rounded-lg border shadow-sm p-4 md:p-6">
+                <h3 className="text-md md:text-lg font-semibold mb-4 text-center md:text-left">Overall Rank History</h3>
+                <div className="h-[250px] md:h-[300px] w-full">
                   <ResponsiveContainer width="100%" height="100%">
                     <AreaChart data={historyData.current}>
                       <defs>
@@ -175,7 +175,7 @@ export default function ManagerStats() {
                         dataKey="event" 
                         tickLine={false}
                         axisLine={false}
-                        tick={{ fontSize: 12, fill: '#888' }}
+                        tick={{ fontSize: 10, fill: '#888' }}
                         interval="preserveStartEnd"
                       />
                       <YAxis 
@@ -183,11 +183,11 @@ export default function ManagerStats() {
                         tickFormatter={formatRank}
                         tickLine={false}
                         axisLine={false}
-                        tick={{ fontSize: 12, fill: '#888' }}
-                        width={40}
+                        tick={{ fontSize: 10, fill: '#888' }}
+                        width={35}
                       />
                       <Tooltip 
-                        contentStyle={{ backgroundColor: 'hsl(var(--card))', borderColor: 'hsl(var(--border))', color: 'hsl(var(--foreground))' }}
+                        contentStyle={{ backgroundColor: 'hsl(var(--card))', borderColor: 'hsl(var(--border))', color: 'hsl(var(--foreground))', fontSize: '12px' }}
                         formatter={(value: any) => [`#${Number(value).toLocaleString()}`, 'Rank']}
                         labelFormatter={(label) => `GW ${label}`}
                       />
@@ -205,9 +205,9 @@ export default function ManagerStats() {
               </div>
 
               {/* Points per GW Chart */}
-              <div className="bg-card text-card-foreground rounded-lg border shadow-sm p-6">
-                <h3 className="text-lg font-semibold mb-4">Gameweek Points</h3>
-                <div className="h-[300px] w-full">
+              <div className="bg-card text-card-foreground rounded-lg border shadow-sm p-4 md:p-6">
+                <h3 className="text-md md:text-lg font-semibold mb-4 text-center md:text-left">Gameweek Points</h3>
+                <div className="h-[250px] md:h-[300px] w-full">
                   <ResponsiveContainer width="100%" height="100%">
                     <BarChart data={historyData.current}>
                       <CartesianGrid strokeDasharray="3 3" opacity={0.1} vertical={false} />
@@ -215,15 +215,16 @@ export default function ManagerStats() {
                         dataKey="event" 
                         tickLine={false}
                         axisLine={false}
-                        tick={{ fontSize: 12, fill: '#888' }}
+                        tick={{ fontSize: 10, fill: '#888' }}
                       />
                       <YAxis 
                         tickLine={false}
                         axisLine={false}
-                        tick={{ fontSize: 12, fill: '#888' }}
+                        tick={{ fontSize: 10, fill: '#888' }}
+                        width={25}
                       />
                       <Tooltip 
-                        contentStyle={{ backgroundColor: 'hsl(var(--card))', borderColor: 'hsl(var(--border))', color: 'hsl(var(--foreground))' }}
+                        contentStyle={{ backgroundColor: 'hsl(var(--card))', borderColor: 'hsl(var(--border))', color: 'hsl(var(--foreground))', fontSize: '12px' }}
                         cursor={{ fill: 'hsl(var(--muted))', opacity: 0.2 }}
                         labelFormatter={(label) => `GW ${label}`}
                       />
@@ -234,9 +235,9 @@ export default function ManagerStats() {
               </div>
 
               {/* Team Value Chart */}
-              <div className="bg-card text-card-foreground rounded-lg border shadow-sm p-6 md:col-span-2">
-                <h3 className="text-lg font-semibold mb-4">Team Value Progression (£m)</h3>
-                <div className="h-[250px] w-full">
+              <div className="bg-card text-card-foreground rounded-lg border shadow-sm p-4 md:p-6 md:col-span-2">
+                <h3 className="text-md md:text-lg font-semibold mb-4 text-center md:text-left">Team Value Progression (£m)</h3>
+                <div className="h-[200px] md:h-[250px] w-full">
                   <ResponsiveContainer width="100%" height="100%">
                     <LineChart data={historyData.current}>
                       <CartesianGrid strokeDasharray="3 3" opacity={0.1} vertical={false} />
@@ -244,17 +245,18 @@ export default function ManagerStats() {
                         dataKey="event" 
                         tickLine={false}
                         axisLine={false}
-                        tick={{ fontSize: 12, fill: '#888' }}
+                        tick={{ fontSize: 10, fill: '#888' }}
                       />
                       <YAxis 
                         domain={['auto', 'auto']}
                         tickFormatter={(val) => `£${(val/10).toFixed(1)}`}
                         tickLine={false}
                         axisLine={false}
-                        tick={{ fontSize: 12, fill: '#888' }}
+                        tick={{ fontSize: 10, fill: '#888' }}
+                        width={40}
                       />
                       <Tooltip 
-                        contentStyle={{ backgroundColor: 'hsl(var(--card))', borderColor: 'hsl(var(--border))', color: 'hsl(var(--foreground))' }}
+                        contentStyle={{ backgroundColor: 'hsl(var(--card))', borderColor: 'hsl(var(--border))', color: 'hsl(var(--foreground))', fontSize: '12px' }}
                         formatter={(value: any) => [`£${(Number(value) / 10).toFixed(1)}m`, 'Value']}
                         labelFormatter={(label) => `GW ${label}`}
                       />
@@ -277,24 +279,24 @@ export default function ManagerStats() {
           {/* History Table */}
           {historyData && historyData.past && historyData.past.length > 0 && (
             <div className="bg-card text-card-foreground rounded-lg border shadow-sm overflow-hidden">
-              <div className="p-6 border-b">
-                 <h3 className="text-lg font-semibold">Season History</h3>
+              <div className="p-4 md:p-6 border-b">
+                 <h3 className="text-md md:text-lg font-semibold text-center md:text-left">Season History</h3>
               </div>
               <div className="overflow-x-auto">
                 <table className="w-full text-sm text-left">
                   <thead className="bg-muted text-muted-foreground text-xs uppercase">
                     <tr>
-                      <th className="px-6 py-3">Season</th>
-                      <th className="px-6 py-3">Points</th>
-                      <th className="px-6 py-3">Rank</th>
+                      <th className="px-4 md:px-6 py-3">Season</th>
+                      <th className="px-4 md:px-6 py-3">Points</th>
+                      <th className="px-4 md:px-6 py-3">Rank</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-border">
                     {historyData.past.map((season) => (
                       <tr key={season.season_name} className="hover:bg-muted/50 transition-colors">
-                        <td className="px-6 py-4 font-medium">{season.season_name}</td>
-                        <td className="px-6 py-4">{season.total_points}</td>
-                        <td className="px-6 py-4">#{season.rank.toLocaleString()}</td>
+                        <td className="px-4 md:px-6 py-4 font-medium whitespace-nowrap">{season.season_name}</td>
+                        <td className="px-4 md:px-6 py-4">{season.total_points}</td>
+                        <td className="px-4 md:px-6 py-4">#{season.rank.toLocaleString()}</td>
                       </tr>
                     ))}
                   </tbody>
