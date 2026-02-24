@@ -69,3 +69,14 @@ async def get_manager_gw_transfers(manager_id: int, event_id: int) -> Any:
             return gw_transfers
         except Exception as e:
             raise HTTPException(status_code=500, detail=f"Error fetching transfers: {str(e)}")
+
+@router.get("/api/fixtures")
+async def get_fixtures() -> Any:
+    """Fetch upcoming fixtures."""
+    async with httpx.AsyncClient() as client:
+        try:
+            response = await client.get(f"{FPL_API_BASE}/fixtures/")
+            response.raise_for_status()
+            return response.json()
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=f"Error fetching fixtures: {str(e)}")
