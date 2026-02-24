@@ -188,7 +188,7 @@ export default function ManagerStats() {
                       />
                       <Tooltip 
                         contentStyle={{ backgroundColor: 'hsl(var(--card))', borderColor: 'hsl(var(--border))', color: 'hsl(var(--foreground))' }}
-                        formatter={(value: number) => [`#${value.toLocaleString()}`, 'Rank']}
+                        formatter={(value: any) => [`#${Number(value).toLocaleString()}`, 'Rank']}
                         labelFormatter={(label) => `GW ${label}`}
                       />
                       <Area 
@@ -255,7 +255,7 @@ export default function ManagerStats() {
                       />
                       <Tooltip 
                         contentStyle={{ backgroundColor: 'hsl(var(--card))', borderColor: 'hsl(var(--border))', color: 'hsl(var(--foreground))' }}
-                        formatter={(value: number) => [`£${(value / 10).toFixed(1)}m`, 'Value']}
+                        formatter={(value: any) => [`£${(Number(value) / 10).toFixed(1)}m`, 'Value']}
                         labelFormatter={(label) => `GW ${label}`}
                       />
                       <Line 
