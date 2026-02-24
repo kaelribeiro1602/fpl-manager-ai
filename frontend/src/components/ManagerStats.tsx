@@ -312,7 +312,6 @@ export default function ManagerStats() {
                       </tr>
                     ))}
                   </tbody>
-                </tbody>
                 </table>
               </div>
             </div>
