@@ -67,7 +67,7 @@ async def recommend_transfer(manager_id: int) -> Dict[str, Any]:
 
             # 3. Use Agno Agent
             agent = Agent(
-                model=Gemini(id="gemini-1.5-flash"),
+                model=Gemini(id="gemini-2.0-flash-exp"),
                 description="You are an expert Fantasy Premier League (FPL) strategist.",
                 instructions=[
                     "Analyze the manager's current squad.",
