@@ -14,6 +14,7 @@ import {
   AreaChart,
   Area
 } from 'recharts';
+import AIRecommendations from './AIRecommendations';
 
 interface Manager {
   id: number;
@@ -193,6 +194,8 @@ export default function ManagerStats() {
 
       {managerData && (
         <div className="space-y-6">
+          <AIRecommendations managerId={managerId} />
+          
           {/* Manager Overview Card */}
           <div className="bg-card text-card-foreground rounded-lg border shadow-sm p-4 md:p-6 space-y-4">
             <div className="text-center md:text-left">
