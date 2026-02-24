@@ -62,8 +62,28 @@ export default function ManagerStats() {
   const [managerId, setManagerId] = useState('');
   const [managerData, setManagerData] = useState<Manager | null>(null);
   const [historyData, setHistoryData] = useState<History | null>(null);
+  const [selectedGW, setSelectedGW] = useState<number | null>(null);
+  const [gwDetails, setGwDetails] = useState<any>(null);
+  const [loadingGW, setLoadingGW] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+
+  const fetchGWDetails = async (event: number) => {
+    setLoadingGW(true);
+    setSelectedGW(event);
+    setGwDetails(null);
+    try {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || '';
+      const res = await fetch(`${apiUrl}/api/manager/${managerId}/gameweek/${event}`);
+      if (!res.ok) throw new Error('Failed to fetch GW details');
+      const json = await res.json();
+      setGwDetails(json);
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setLoadingGW(false);
+    }
+  };
 
   const fetchStats = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -236,15 +256,94 @@ export default function ManagerStats() {
                       />
                       <Tooltip 
                         contentStyle={{ backgroundColor: 'hsl(var(--card))', borderColor: 'hsl(var(--border))', color: 'hsl(var(--foreground))', fontSize: '12px' }}
-                        cursor={{ fill: 'hsl(var(--muted))', opacity: 0.2 }}
+                        cursor={{ fill: 'hsl(var(--muted))', opacity: 0.2, cursor: 'pointer' }}
                         labelFormatter={(label) => `GW ${label}`}
                       />
-                      <Bar dataKey="actual" stackId="a" fill="#3b82f6" name="Points Scored" />
-                      <Bar dataKey="bench" stackId="a" fill="#f97316" name="Left on Bench" radius={[4, 4, 0, 0]} />
+                      <Bar 
+                        dataKey="actual" 
+                        stackId="a" 
+                        fill="#3b82f6" 
+                        name="Points Scored" 
+                        onClick={(data) => fetchGWDetails(data.event)}
+                        style={{ cursor: 'pointer' }}
+                      />
+                      <Bar 
+                        dataKey="bench" 
+                        stackId="a" 
+                        fill="#f97316" 
+                        name="Left on Bench" 
+                        radius={[4, 4, 0, 0]} 
+                        onClick={(data) => fetchGWDetails(data.event)}
+                        style={{ cursor: 'pointer' }}
+                      />
                     </BarChart>
                   </ResponsiveContainer>
                 </div>
               </div>
+
+              {/* GW Details Modal/Section */}
+              {selectedGW && (
+                <div className="bg-card text-card-foreground rounded-lg border shadow-sm p-4 md:p-6 md:col-span-2 animate-in fade-in slide-in-from-top-4 duration-300">
+                  <div className="flex justify-between items-center mb-4">
+                    <h3 className="text-lg font-bold">Gameweek {selectedGW} Details</h3>
+                    <button 
+                      onClick={() => setSelectedGW(null)}
+                      className="text-muted-foreground hover:text-foreground p-1"
+                    >
+                      ✕ Close
+                    </button>
+                  </div>
+                  
+                  {loadingGW ? (
+                    <div className="flex justify-center py-8">
+                      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+                    </div>
+                  ) : gwDetails ? (
+                    <div className="space-y-6">
+                      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 bg-muted/30 p-4 rounded-lg">
+                        <div>
+                          <p className="text-xs text-muted-foreground uppercase">Transfers</p>
+                          <p className="font-bold">{gwDetails.active_chip === 'wildcard' ? 'Wildcard' : gwDetails.entry_history.event_transfers}</p>
+                        </div>
+                        <div>
+                          <p className="text-xs text-muted-foreground uppercase">Transfer Cost</p>
+                          <p className="font-bold text-red-500">-{gwDetails.entry_history.event_transfers_cost}</p>
+                        </div>
+                        <div>
+                          <p className="text-xs text-muted-foreground uppercase">GW Rank</p>
+                          <p className="font-bold">#{gwDetails.entry_history.rank.toLocaleString()}</p>
+                        </div>
+                        <div>
+                          <p className="text-xs text-muted-foreground uppercase">Chip Active</p>
+                          <p className="font-bold capitalize">{gwDetails.active_chip || 'None'}</p>
+                        </div>
+                      </div>
+
+                      <div className="grid gap-4">
+                         <p className="text-sm font-semibold border-b pb-1">Starting XI</p>
+                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                            {gwDetails.picks.map((pick: any) => (
+                              <div 
+                                key={pick.element} 
+                                className={`flex justify-between p-2 rounded border text-sm ${pick.position <= 11 ? 'bg-background' : 'bg-orange-500/10 border-orange-500/20'}`}
+                              >
+                                <span>
+                                  {pick.is_captain && <span className="text-primary font-bold mr-1">©</span>}
+                                  {pick.is_vice_captain && <span className="text-muted-foreground font-bold mr-1">Ⓥ</span>}
+                                  Player ID: {pick.element}
+                                </span>
+                                <span className="text-muted-foreground">Pos: {pick.position}</span>
+                              </div>
+                            ))}
+                         </div>
+                         <p className="text-[10px] text-muted-foreground italic">* Currently showing Player IDs. We can resolve these to names once the Bootstrap data is indexed.</p>
+                      </div>
+                    </div>
+                  ) : (
+                    <p className="text-center text-muted-foreground py-8">Select a gameweek to see your team.</p>
+                  )}
+                </div>
+              )}
 
               {/* Team Value Chart */}
               <div className="bg-card text-card-foreground rounded-lg border shadow-sm p-4 md:p-6 md:col-span-2">
