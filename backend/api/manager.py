@@ -33,3 +33,14 @@ async def get_manager_history(manager_id: int) -> Dict[str, Any]:
              raise HTTPException(status_code=500, detail=f"FPL API Error: {str(e)}")
         except Exception as e:
             raise HTTPException(status_code=500, detail=f"Internal Server Error: {str(e)}")
+
+@router.get("/api/manager/{manager_id}/gameweek/{event_id}")
+async def get_manager_gameweek(manager_id: int, event_id: int) -> Dict[str, Any]:
+    """Fetch specific gameweek picks for a manager."""
+    async with httpx.AsyncClient() as client:
+        try:
+            response = await client.get(f"{FPL_API_BASE}/entry/{manager_id}/event/{event_id}/picks/")
+            response.raise_for_status()
+            return response.json()
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=f"Error fetching GW picks: {str(e)}")

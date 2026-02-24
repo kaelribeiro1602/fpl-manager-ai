@@ -12,7 +12,8 @@ import {
   BarChart,
   Bar,
   AreaChart,
-  Area
+  Area,
+  ComposedChart
 } from 'recharts';
 
 interface Manager {
@@ -101,6 +102,16 @@ export default function ManagerStats() {
     return rank.toString();
   };
 
+  // Calculate Optimal Score Data
+  const optimalData = historyData?.current.map(gw => ({
+    event: gw.event,
+    actual: gw.points,
+    bench: gw.points_on_bench,
+    total_potential: gw.points + gw.points_on_bench
+  }));
+
+  const totalBenchPoints = historyData?.current.reduce((acc, curr) => acc + curr.points_on_bench, 0) || 0;
+
   return (
     <div className="max-w-6xl mx-auto p-4 md:p-6 space-y-4 md:space-y-6">
       <div className="bg-card text-card-foreground rounded-lg border shadow-sm p-4 md:p-6">
@@ -144,8 +155,8 @@ export default function ManagerStats() {
                 <p className="text-xl md:text-2xl font-bold">{managerData.summary_overall_points?.toLocaleString()}</p>
               </div>
               <div>
-                <p className="text-xs md:text-sm text-muted-foreground uppercase font-medium">GW Points</p>
-                <p className="text-lg md:text-xl font-semibold">{managerData.summary_event_points}</p>
+                <p className="text-xs md:text-sm text-muted-foreground uppercase font-medium">Points on Bench</p>
+                <p className="text-lg md:text-xl font-semibold text-orange-500">{totalBenchPoints}</p>
               </div>
               <div>
                 <p className="text-xs md:text-sm text-muted-foreground uppercase font-medium">Region</p>
@@ -204,12 +215,12 @@ export default function ManagerStats() {
                 </div>
               </div>
 
-              {/* Points per GW Chart */}
+              {/* Optimal vs Actual Points Chart */}
               <div className="bg-card text-card-foreground rounded-lg border shadow-sm p-4 md:p-6">
-                <h3 className="text-md md:text-lg font-semibold mb-4 text-center md:text-left">Gameweek Points</h3>
+                <h3 className="text-md md:text-lg font-semibold mb-4 text-center md:text-left">Actual vs. Bench Points</h3>
                 <div className="h-[250px] md:h-[300px] w-full">
                   <ResponsiveContainer width="100%" height="100%">
-                    <BarChart data={historyData.current}>
+                    <BarChart data={optimalData}>
                       <CartesianGrid strokeDasharray="3 3" opacity={0.1} vertical={false} />
                       <XAxis 
                         dataKey="event" 
@@ -228,7 +239,8 @@ export default function ManagerStats() {
                         cursor={{ fill: 'hsl(var(--muted))', opacity: 0.2 }}
                         labelFormatter={(label) => `GW ${label}`}
                       />
-                      <Bar dataKey="points" fill="#3b82f6" radius={[4, 4, 0, 0]} />
+                      <Bar dataKey="actual" stackId="a" fill="#3b82f6" name="Points Scored" />
+                      <Bar dataKey="bench" stackId="a" fill="#f97316" name="Left on Bench" radius={[4, 4, 0, 0]} />
                     </BarChart>
                   </ResponsiveContainer>
                 </div>
@@ -300,6 +312,7 @@ export default function ManagerStats() {
                       </tr>
                     ))}
                   </tbody>
+                </tbody>
                 </table>
               </div>
             </div>
