@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 import httpx
+from .manager import router as manager_router  # Use relative import if manager.py is in same directory
 
 app = FastAPI()
 
@@ -10,6 +11,8 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+app.include_router(manager_router)
 
 FPL_BASE_URL = "https://fantasy.premierleague.com/api"
 

@@ -1,6 +1,7 @@
 "use client";
 
 import { useBackendHealth, useFplBootstrap } from "@/hooks/use-fpl-api";
+import ManagerStats from "@/components/ManagerStats";
 
 export default function Home() {
   const { data: health, isLoading: isHealthLoading, isError: isHealthError } = useBackendHealth();
@@ -37,6 +38,8 @@ export default function Home() {
           </div>
         </div>
       </div>
+
+      <ManagerStats />
     </div>
   );
 }
