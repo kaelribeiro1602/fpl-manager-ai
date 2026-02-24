@@ -44,3 +44,28 @@ async def get_manager_gameweek(manager_id: int, event_id: int) -> Dict[str, Any]
             return response.json()
         except Exception as e:
             raise HTTPException(status_code=500, detail=f"Error fetching GW picks: {str(e)}")
+
+@router.get("/api/bootstrap")
+async def get_bootstrap_static() -> Dict[str, Any]:
+    """Fetch general FPL data (players, teams, etc.)."""
+    async with httpx.AsyncClient() as client:
+        try:
+            response = await client.get(f"{FPL_API_BASE}/bootstrap-static/")
+            response.raise_for_status()
+            return response.json()
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=f"Error fetching bootstrap data: {str(e)}")
+
+@router.get("/api/manager/{manager_id}/gameweek/{event_id}/transfers")
+async def get_manager_gw_transfers(manager_id: int, event_id: int) -> Any:
+    """Fetch transfers for a specific gameweek."""
+    async with httpx.AsyncClient() as client:
+        try:
+            response = await client.get(f"{FPL_API_BASE}/entry/{manager_id}/transfers/")
+            response.raise_for_status()
+            all_transfers = response.json()
+            # Filter for the specific event (GW)
+            gw_transfers = [t for t in all_transfers if t["event"] == event_id]
+            return gw_transfers
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=f"Error fetching transfers: {str(e)}")

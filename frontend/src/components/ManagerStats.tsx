@@ -12,8 +12,7 @@ import {
   BarChart,
   Bar,
   AreaChart,
-  Area,
-  ComposedChart
+  Area
 } from 'recharts';
 
 interface Manager {
@@ -62,28 +61,64 @@ export default function ManagerStats() {
   const [managerId, setManagerId] = useState('');
   const [managerData, setManagerData] = useState<Manager | null>(null);
   const [historyData, setHistoryData] = useState<History | null>(null);
+  const [bootstrapData, setBootstrapData] = useState<any>(null);
   const [selectedGW, setSelectedGW] = useState<number | null>(null);
   const [gwDetails, setGwDetails] = useState<any>(null);
+  const [gwTransfers, setGwTransfers] = useState<any[]>([]);
   const [loadingGW, setLoadingGW] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+
+  // Fetch bootstrap data on mount
+  useState(() => {
+    const fetchBootstrap = async () => {
+      try {
+        const apiUrl = process.env.NEXT_PUBLIC_API_URL || '';
+        const res = await fetch(`${apiUrl}/api/bootstrap`);
+        if (res.ok) {
+          const data = await res.json();
+          const playersMap = data.elements.reduce((acc: any, el: any) => {
+            acc[el.id] = el.web_name;
+            return acc;
+          }, {});
+          setBootstrapData(playersMap);
+        }
+      } catch (err) {
+        console.error('Failed to fetch bootstrap data', err);
+      }
+    };
+    fetchBootstrap();
+  });
 
   const fetchGWDetails = async (event: number) => {
     setLoadingGW(true);
     setSelectedGW(event);
     setGwDetails(null);
+    setGwTransfers([]);
     try {
       const apiUrl = process.env.NEXT_PUBLIC_API_URL || '';
-      const res = await fetch(`${apiUrl}/api/manager/${managerId}/gameweek/${event}`);
-      if (!res.ok) throw new Error('Failed to fetch GW details');
-      const json = await res.json();
-      setGwDetails(json);
+      
+      const [picksRes, transRes] = await Promise.all([
+        fetch(`${apiUrl}/api/manager/${managerId}/gameweek/${event}`),
+        fetch(`${apiUrl}/api/manager/${managerId}/gameweek/${event}/transfers`)
+      ]);
+
+      if (picksRes.ok) {
+        const json = await picksRes.json();
+        setGwDetails(json);
+      }
+      if (transRes.ok) {
+        const json = await transRes.json();
+        setGwTransfers(json);
+      }
     } catch (err: any) {
       setError(err.message);
     } finally {
       setLoadingGW(false);
     }
   };
+
+  const getPlayerName = (id: number) => bootstrapData?.[id] || `Player ${id}`;
 
   const fetchStats = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -288,7 +323,7 @@ export default function ManagerStats() {
                     <h3 className="text-lg font-bold">Gameweek {selectedGW} Details</h3>
                     <button 
                       onClick={() => setSelectedGW(null)}
-                      className="text-muted-foreground hover:text-foreground p-1"
+                      className="text-muted-foreground hover:text-foreground p-1 text-xs"
                     >
                       ✕ Close
                     </button>
@@ -303,25 +338,43 @@ export default function ManagerStats() {
                       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 bg-muted/30 p-4 rounded-lg">
                         <div>
                           <p className="text-xs text-muted-foreground uppercase">Transfers</p>
-                          <p className="font-bold">{gwDetails.active_chip === 'wildcard' ? 'Wildcard' : gwDetails.entry_history.event_transfers}</p>
+                          <p className="font-bold text-sm md:text-base">{gwDetails.active_chip === 'wildcard' ? 'Wildcard' : gwDetails.entry_history.event_transfers}</p>
                         </div>
                         <div>
                           <p className="text-xs text-muted-foreground uppercase">Transfer Cost</p>
-                          <p className="font-bold text-red-500">-{gwDetails.entry_history.event_transfers_cost}</p>
+                          <p className="font-bold text-red-500 text-sm md:text-base">-{gwDetails.entry_history.event_transfers_cost}</p>
                         </div>
                         <div>
                           <p className="text-xs text-muted-foreground uppercase">GW Rank</p>
-                          <p className="font-bold">#{gwDetails.entry_history.rank.toLocaleString()}</p>
+                          <p className="font-bold text-sm md:text-base">#{gwDetails.entry_history.rank.toLocaleString()}</p>
                         </div>
                         <div>
                           <p className="text-xs text-muted-foreground uppercase">Chip Active</p>
-                          <p className="font-bold capitalize">{gwDetails.active_chip || 'None'}</p>
+                          <p className="font-bold capitalize text-sm md:text-base">{gwDetails.active_chip || 'None'}</p>
                         </div>
                       </div>
 
+                      {gwTransfers.length > 0 && (
+                        <div className="space-y-2">
+                          <p className="text-sm font-semibold border-b pb-1">Transfers Made</p>
+                          <div className="grid gap-2">
+                            {gwTransfers.map((t: any, i: number) => (
+                              <div key={i} className="flex flex-wrap items-center justify-between text-xs md:text-sm bg-muted/20 p-2 rounded">
+                                <div className="flex items-center gap-2">
+                                  <span className="text-red-500 font-medium">OUT: {getPlayerName(t.element_out)}</span>
+                                  <span className="text-muted-foreground">→</span>
+                                  <span className="text-green-500 font-medium">IN: {getPlayerName(t.element_in)}</span>
+                                </div>
+                                <span className="text-muted-foreground">£{(t.element_in_cost / 10).toFixed(1)}m</span>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+
                       <div className="grid gap-4">
                          <p className="text-sm font-semibold border-b pb-1">Starting XI</p>
-                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
                             {gwDetails.picks.map((pick: any) => (
                               <div 
                                 key={pick.element} 
@@ -330,13 +383,12 @@ export default function ManagerStats() {
                                 <span>
                                   {pick.is_captain && <span className="text-primary font-bold mr-1">©</span>}
                                   {pick.is_vice_captain && <span className="text-muted-foreground font-bold mr-1">Ⓥ</span>}
-                                  Player ID: {pick.element}
+                                  {getPlayerName(pick.element)}
                                 </span>
-                                <span className="text-muted-foreground">Pos: {pick.position}</span>
+                                <span className="text-muted-foreground text-[10px]">Pos: {pick.position}</span>
                               </div>
                             ))}
                          </div>
-                         <p className="text-[10px] text-muted-foreground italic">* Currently showing Player IDs. We can resolve these to names once the Bootstrap data is indexed.</p>
                       </div>
                     </div>
                   ) : (
