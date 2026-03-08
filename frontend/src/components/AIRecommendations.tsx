@@ -51,7 +51,7 @@ export default function AIRecommendations({ managerId }: { managerId: string }) 
     <div className="bg-card text-card-foreground rounded-lg border shadow-sm p-4 md:p-6 space-y-4">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <Sparkles className="w-5 h-5 text-yellow-500" />
+          <Sparkles className="w-5 h-5 text-primary" />
           <h3 className="text-lg font-bold">AI Transfer Advisor</h3>
         </div>
         <button
@@ -82,7 +82,7 @@ export default function AIRecommendations({ managerId }: { managerId: string }) 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-4">
             <div className="text-center">
               <p className="text-[10px] uppercase text-muted-foreground font-bold mb-1">Sell</p>
-              <div className="bg-red-500/10 text-red-500 px-4 py-2 rounded border border-red-500/20 font-bold">
+              <div className="bg-primary/10 text-primary px-4 py-2 rounded border border-primary/20 font-bold">
                 {recommendation.player_out}
               </div>
             </div>
@@ -91,7 +91,7 @@ export default function AIRecommendations({ managerId }: { managerId: string }) 
             
             <div className="text-center">
               <p className="text-[10px] uppercase text-muted-foreground font-bold mb-1">Buy</p>
-              <div className="bg-green-500/10 text-green-500 px-4 py-2 rounded border border-green-500/20 font-bold">
+              <div className="bg-secondary text-secondary-foreground px-4 py-2 rounded border border-secondary/20 font-bold">
                 {recommendation.player_in}
               </div>
             </div>
