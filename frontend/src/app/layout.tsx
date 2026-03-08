@@ -30,8 +30,8 @@ export default function RootLayout({
       >
         <Providers>
           <main className="min-h-screen flex flex-col">
-            <header className="border-b px-6 py-4 flex items-center justify-between">
-              <h1 className="text-xl font-bold tracking-tight">⚽ FPL Manager AI</h1>
+            <header className="border-b border-primary/30 bg-secondary px-6 py-4 flex items-center justify-between shadow-md">
+              <h1 className="text-xl font-bold tracking-tight text-white">FPL MANAGER AI</h1>
               <nav className="flex gap-4 text-sm font-medium">
                 <span className="text-muted-foreground">Kael v0.1.0</span>
               </nav>

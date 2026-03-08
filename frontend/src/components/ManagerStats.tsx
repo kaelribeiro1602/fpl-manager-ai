@@ -214,7 +214,7 @@ export default function ManagerStats() {
               </div>
               <div>
                 <p className="text-xs md:text-sm text-muted-foreground uppercase font-medium">Points on Bench</p>
-                <p className="text-lg md:text-xl font-semibold text-orange-500">{totalBenchPoints}</p>
+                <p className="text-lg md:text-xl font-semibold text-primary">{totalBenchPoints}</p>
               </div>
               <div>
                 <p className="text-xs md:text-sm text-muted-foreground uppercase font-medium">Region</p>
@@ -235,8 +235,8 @@ export default function ManagerStats() {
                     <AreaChart data={historyData.current}>
                       <defs>
                         <linearGradient id="colorRank" x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="5%" stopColor="#22c55e" stopOpacity={0.1}/>
-                          <stop offset="95%" stopColor="#22c55e" stopOpacity={0}/>
+                          <stop offset="5%" stopColor="#FF6500" stopOpacity={0.1}/>
+                          <stop offset="95%" stopColor="#FF6500" stopOpacity={0}/>
                         </linearGradient>
                       </defs>
                       <CartesianGrid strokeDasharray="3 3" opacity={0.1} vertical={false} />
@@ -263,7 +263,7 @@ export default function ManagerStats() {
                       <Area 
                         type="monotone" 
                         dataKey="overall_rank" 
-                        stroke="#22c55e" 
+                        stroke="#FF6500" 
                         fillOpacity={1} 
                         fill="url(#colorRank)" 
                         strokeWidth={2}
@@ -300,7 +300,7 @@ export default function ManagerStats() {
                       <Bar 
                         dataKey="actual" 
                         stackId="a" 
-                        fill="#3b82f6" 
+                        fill="#1E3E62" 
                         name="Points Scored" 
                         onClick={(data: any) => fetchGWDetails(data.event)}
                         style={{ cursor: 'pointer' }}
@@ -308,7 +308,7 @@ export default function ManagerStats() {
                       <Bar 
                         dataKey="bench" 
                         stackId="a" 
-                        fill="#f97316" 
+                        fill="#FF6500" 
                         name="Left on Bench" 
                         radius={[4, 4, 0, 0]} 
                         onClick={(data: any) => fetchGWDetails(data.event)}
@@ -345,7 +345,7 @@ export default function ManagerStats() {
                         </div>
                         <div>
                           <p className="text-xs text-muted-foreground uppercase">Transfer Cost</p>
-                          <p className="font-bold text-red-500 text-sm md:text-base">-{gwDetails.entry_history.event_transfers_cost}</p>
+                          <p className="font-bold text-primary text-sm md:text-base">-{gwDetails.entry_history.event_transfers_cost}</p>
                         </div>
                         <div>
                           <p className="text-xs text-muted-foreground uppercase">GW Rank</p>
@@ -364,9 +364,9 @@ export default function ManagerStats() {
                             {gwTransfers.map((t: any, i: number) => (
                               <div key={i} className="flex flex-wrap items-center justify-between text-xs md:text-sm bg-muted/20 p-2 rounded">
                                 <div className="flex items-center gap-2">
-                                  <span className="text-red-500 font-medium">OUT: {getPlayerName(t.element_out)}</span>
+                                  <span className="text-primary font-medium">OUT: {getPlayerName(t.element_out)}</span>
                                   <span className="text-muted-foreground">→</span>
-                                  <span className="text-green-500 font-medium">IN: {getPlayerName(t.element_in)}</span>
+                                  <span className="text-secondary font-medium">IN: {getPlayerName(t.element_in)}</span>
                                 </div>
                                 <span className="text-muted-foreground">£{(t.element_in_cost / 10).toFixed(1)}m</span>
                               </div>
@@ -381,7 +381,7 @@ export default function ManagerStats() {
                             {gwDetails.picks.map((pick: any) => (
                               <div 
                                 key={pick.element} 
-                                className={`flex justify-between p-2 rounded border text-sm ${pick.position <= 11 ? 'bg-background' : 'bg-orange-500/10 border-orange-500/20'}`}
+                                className={`flex justify-between p-2 rounded border text-sm ${pick.position <= 11 ? 'bg-background' : 'bg-primary/10 border-primary/20'}`}
                               >
                                 <span>
                                   {pick.is_captain && <span className="text-primary font-bold mr-1">©</span>}
@@ -429,7 +429,7 @@ export default function ManagerStats() {
                       <Line 
                         type="monotone" 
                         dataKey="value" 
-                        stroke="#a855f7" 
+                        stroke="#FF6500" 
                         strokeWidth={2}
                         dot={false}
                         activeDot={{ r: 4 }}

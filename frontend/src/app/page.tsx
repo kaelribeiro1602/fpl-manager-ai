@@ -22,7 +22,7 @@ export default function Home() {
             <h3 className="font-medium mb-1">Backend Connection</h3>
             <div className="flex items-center gap-2">
               <div className={`h-2 w-2 rounded-full ${
-                status === "loading" ? "bg-yellow-500 animate-pulse" : 
+                status === "loading" ? "bg-primary animate-pulse" : 
                 status === "online" ? "bg-green-500" : "bg-red-500"
               }`} />
               <p className="text-sm capitalize">{status}</p>
